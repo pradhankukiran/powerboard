@@ -146,9 +146,16 @@ ticketRoutes.patch("/:id", async (req: Request, res: Response) => {
     if (req.body.assignedToId !== undefined) updates.assignedToId = req.body.assignedToId;
     if (req.body.priority !== undefined) updates.priority = req.body.priority;
 
-    // Auto-set timestamp fields on status transitions
-    if (req.body.status === "resolved") {
-      updates.resolvedAt = new Date();
+    // Auto-set timestamp and duration fields on status transitions
+    if (req.body.status === "resolved" && ticket.status !== "resolved") {
+      const now = new Date();
+      updates.resolvedAt = now;
+      updates.resolutionTimeMinutes = Math.round(
+        (now.getTime() - ticket.createdAt.getTime()) / 60000,
+      );
+      if (!ticket.responseTimeMinutes) {
+        updates.responseTimeMinutes = updates.resolutionTimeMinutes;
+      }
     }
     if (req.body.status === "closed") {
       updates.closedAt = new Date();
