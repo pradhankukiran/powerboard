@@ -3,7 +3,7 @@ import { EmbedFrame } from "../../components/layout/EmbedFrame";
 import { useGetSupersetTokenMutation } from "./reportsApi";
 
 const SUPERSET_URL = import.meta.env.VITE_SUPERSET_URL || "http://localhost:8088";
-const DASHBOARD_UUID = "260fa443-c6e8-4ea4-ba57-bc4f0140157c";
+const DASHBOARD_UUID = import.meta.env.VITE_SUPERSET_DASHBOARD_UUID || "260fa443-c6e8-4ea4-ba57-bc4f0140157c";
 
 export function ReportsPage() {
   const [getSupersetToken, { data, isLoading, isError }] = useGetSupersetTokenMutation();
