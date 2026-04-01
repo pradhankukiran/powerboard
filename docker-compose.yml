@@ -50,6 +50,8 @@ services:
     container_name: pb-web
     depends_on:
       - api
+    environment:
+      API_HOST: api
     ports:
       - "3000:3000"
     networks:
