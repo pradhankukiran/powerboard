@@ -8,16 +8,20 @@ interface ServiceStatus {
   status: "checking" | "online" | "offline";
 }
 
+const SERVICES: Pick<ServiceStatus, "name" | "url">[] = [
+  { name: "API Server", url: `${import.meta.env.VITE_API_URL || ""}/api/v1/health` },
+];
+
 export function SettingsPage() {
   const user = useAppSelector((state) => state.auth.user);
-  const [services, setServices] = useState<ServiceStatus[]>([
-    { name: "API Server", url: `${import.meta.env.VITE_API_URL || ""}/api/v1/health`, status: "checking" },
-  ]);
+  const [services, setServices] = useState<ServiceStatus[]>(
+    SERVICES.map((s) => ({ ...s, status: "checking" })),
+  );
 
   useEffect(() => {
     async function checkServices() {
       const updated = await Promise.all(
-        services.map(async (svc) => {
+        SERVICES.map(async (svc) => {
           try {
             const res = await fetch(svc.url, { method: "GET" });
             return { ...svc, status: res.ok ? "online" : "offline" } as ServiceStatus;
@@ -29,7 +33,6 @@ export function SettingsPage() {
       setServices(updated);
     }
     checkServices();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
