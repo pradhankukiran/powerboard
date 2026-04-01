@@ -8,4 +8,10 @@ export const sequelize = new Sequelize(env.databaseUrl, {
     timestamps: true,
     underscored: true,
   },
+  pool: {
+    max: 10,
+    min: 2,
+    idle: 30000,
+    acquire: 30000,
+  },
 });
