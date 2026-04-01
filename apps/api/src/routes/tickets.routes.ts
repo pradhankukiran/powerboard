@@ -132,12 +132,24 @@ ticketRoutes.post("/", async (req: Request, res: Response) => {
   }
 });
 
+const VALID_STATUSES = ["open", "in_progress", "waiting_on_client", "escalated", "resolved", "closed"];
+const VALID_PRIORITIES = ["critical", "high", "medium", "low"];
+
 // PATCH /:id — update ticket fields
 ticketRoutes.patch("/:id", async (req: Request, res: Response) => {
   try {
     const ticket = await Ticket.findByPk(req.params.id as string);
     if (!ticket) {
       res.status(404).json({ message: "Ticket not found" });
+      return;
+    }
+
+    if (req.body.status !== undefined && !VALID_STATUSES.includes(req.body.status)) {
+      res.status(400).json({ message: `Invalid status. Must be one of: ${VALID_STATUSES.join(", ")}` });
+      return;
+    }
+    if (req.body.priority !== undefined && !VALID_PRIORITIES.includes(req.body.priority)) {
+      res.status(400).json({ message: `Invalid priority. Must be one of: ${VALID_PRIORITIES.join(", ")}` });
       return;
     }
 
