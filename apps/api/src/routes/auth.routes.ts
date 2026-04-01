@@ -1,8 +1,7 @@
 import { Router, Response } from "express";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
-import { env } from "../config/env.js";
 import { requireAuth, AuthRequest } from "../middleware/auth.js";
+import { generateToken } from "../services/auth.service.js";
 import { User } from "../models/User.js";
 
 export const authRoutes = Router();
@@ -27,11 +26,7 @@ authRoutes.post("/login", async (req, res) => {
       return;
     }
 
-    const token = jwt.sign(
-      { userId: user.id, role: user.role },
-      env.jwtSecret,
-      { expiresIn: "8h" },
-    );
+    const token = generateToken(user.id, user.role);
 
     const { passwordHash: _pw, ...userData } = user.toJSON();
 
