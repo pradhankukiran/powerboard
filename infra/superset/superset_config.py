@@ -16,7 +16,7 @@ GUEST_TOKEN_JWT_EXP_SECONDS = 600
 
 SQLALCHEMY_DATABASE_URI = os.environ.get(
     "SUPERSET_META_DB_URI",
-    "postgresql://powerboard:powerboard_prod_2024@postgres.railway.internal:5432/powerboard_superset"
+    "postgresql://powerboard:powerboard_dev@postgres:5432/powerboard_superset"
 )
 
 SECRET_KEY = os.environ.get("SUPERSET_SECRET_KEY", "powerboard_superset_dev_secret")
