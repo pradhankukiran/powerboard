@@ -47,6 +47,8 @@ services:
     build:
       context: .
       dockerfile: apps/web/Dockerfile
+      args:
+        VITE_API_URL: ""
     container_name: pb-web
     depends_on:
       - api

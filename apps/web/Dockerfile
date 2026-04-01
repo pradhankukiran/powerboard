@@ -27,4 +27,5 @@ COPY apps/web/nginx.conf.template /etc/nginx/templates/default.conf.template
 
 ENV PORT=3000
 
-CMD ["sh", "-c", "envsubst '$$PORT' < /etc/nginx/templates/default.conf.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"]
+ENV API_HOST=api
+CMD ["sh", "-c", "envsubst '$$PORT $$API_HOST' < /etc/nginx/templates/default.conf.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"]
