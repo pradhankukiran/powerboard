@@ -1,5 +1,6 @@
 import { Router, Request, Response } from "express";
 import { Op, fn, col } from "sequelize";
+import { sequelize } from "../config/database.js";
 import { Ticket } from "../models/Ticket.js";
 import { Client } from "../models/Client.js";
 import { User } from "../models/User.js";
@@ -102,18 +103,27 @@ ticketRoutes.post("/", async (req: Request, res: Response) => {
   try {
     const { subject, description, priority, category, clientId, deviceId, assignedToId } = req.body;
 
-    const existingCount = await Ticket.count();
-    const ticketNumber = `TKT-${String(existingCount + 1).padStart(5, "0")}`;
+    const ticket = await sequelize.transaction(async (t) => {
+      const [result] = await sequelize.query<{ next_num: number }>(
+        `SELECT COALESCE(MAX(CAST(SUBSTRING(ticket_number FROM 5) AS INTEGER)), 0) + 1 AS next_num FROM tickets`,
+        { transaction: t, type: "SELECT" as never },
+      );
+      const nextNum = (result as unknown as { next_num: number }).next_num;
+      const ticketNumber = `TKT-${String(nextNum).padStart(5, "0")}`;
 
-    const ticket = await Ticket.create({
-      ticketNumber,
-      subject,
-      description,
-      priority,
-      category,
-      clientId,
-      deviceId: deviceId || null,
-      assignedToId: assignedToId || null,
+      return Ticket.create(
+        {
+          ticketNumber,
+          subject,
+          description,
+          priority,
+          category,
+          clientId,
+          deviceId: deviceId || null,
+          assignedToId: assignedToId || null,
+        },
+        { transaction: t },
+      );
     });
 
     res.status(201).json({ data: ticket });
