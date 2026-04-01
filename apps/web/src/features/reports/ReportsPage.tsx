@@ -10,7 +10,7 @@ export function ReportsPage() {
 
   useEffect(() => {
     getSupersetToken({ dashboardId: DASHBOARD_UUID });
-  }, [getSupersetToken]);
+  }, []);
 
   const embedUrl = data?.token
     ? `${SUPERSET_URL}/embedded/${DASHBOARD_UUID}?guest_token=${data.token}`

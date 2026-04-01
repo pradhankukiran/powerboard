@@ -7,7 +7,7 @@ export function AnalyticsPage() {
 
   useEffect(() => {
     getMetabaseToken({ resourceType: "dashboard", resourceId: 1 });
-  }, [getMetabaseToken]);
+  }, []);
 
   return (
     <div>
