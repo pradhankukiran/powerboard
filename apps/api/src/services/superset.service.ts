@@ -12,6 +12,9 @@ export async function getSupersetGuestToken(
       provider: "db",
     }),
   });
+  if (!loginRes.ok) {
+    throw new Error(`Superset login failed: ${loginRes.status} ${loginRes.statusText}`);
+  }
   const { access_token: accessToken } = (await loginRes.json()) as {
     access_token: string;
   };
@@ -22,6 +25,9 @@ export async function getSupersetGuestToken(
       headers: { Authorization: `Bearer ${accessToken}` },
     },
   );
+  if (!csrfRes.ok) {
+    throw new Error(`Superset CSRF token fetch failed: ${csrfRes.status} ${csrfRes.statusText}`);
+  }
   const { result: csrfToken } = (await csrfRes.json()) as { result: string };
 
   const guestTokenRes = await fetch(
@@ -44,6 +50,9 @@ export async function getSupersetGuestToken(
       }),
     },
   );
+  if (!guestTokenRes.ok) {
+    throw new Error(`Superset guest token fetch failed: ${guestTokenRes.status} ${guestTokenRes.statusText}`);
+  }
   const { token } = (await guestTokenRes.json()) as { token: string };
 
   return token;
