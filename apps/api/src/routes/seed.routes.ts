@@ -25,7 +25,7 @@ seedRoutes.post("/create-db", async (_req, res) => {
     await sequelize.query("CREATE DATABASE powerboard_superset", { raw: true });
     res.json({ message: "Database recreated" });
   } catch (err) {
-    res.json({ message: "Error", error: String(err) });
+    res.status(500).json({ message: "Error", error: String(err) });
   }
 });
 
