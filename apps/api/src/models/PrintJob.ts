@@ -114,6 +114,11 @@ export class PrintJob
         sequelize,
         tableName: "print_jobs",
         underscored: true,
+        indexes: [
+          { fields: ["client_id"] },
+          { fields: ["device_id"] },
+          { fields: ["user_id"] },
+        ],
       },
     );
     return PrintJob;

@@ -148,6 +148,9 @@ export class Device
         sequelize,
         tableName: "devices",
         underscored: true,
+        indexes: [
+          { fields: ["client_id"] },
+        ],
       },
     );
     return Device;

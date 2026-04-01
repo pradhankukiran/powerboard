@@ -120,6 +120,11 @@ export class Alert
         sequelize,
         tableName: "alerts",
         underscored: true,
+        indexes: [
+          { fields: ["device_id"] },
+          { fields: ["client_id"] },
+          { fields: ["is_acknowledged"] },
+        ],
       },
     );
     return Alert;

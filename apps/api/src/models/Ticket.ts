@@ -181,6 +181,12 @@ export class Ticket
         sequelize,
         tableName: "tickets",
         underscored: true,
+        indexes: [
+          { fields: ["client_id"] },
+          { fields: ["assigned_to_id"] },
+          { fields: ["device_id"] },
+          { fields: ["status"] },
+        ],
       },
     );
     return Ticket;
