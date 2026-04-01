@@ -2,36 +2,26 @@ import { useState, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../app/hooks";
 import { setCredentials } from "./authSlice";
+import { useLoginMutation } from "./authApi";
 
 export function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [login, { isLoading: loading }] = useLoginMutation();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    setLoading(true);
     setError("");
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL || ""}/api/v1/auth/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.message || "Login failed");
-      }
-      const data = await res.json();
+      const data = await login({ email, password }).unwrap();
       dispatch(setCredentials({ token: data.token, user: data.user }));
       navigate("/");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Login failed");
-    } finally {
-      setLoading(false);
+      const message = (err as { data?: { message?: string } })?.data?.message || "Login failed";
+      setError(message);
     }
   }
 

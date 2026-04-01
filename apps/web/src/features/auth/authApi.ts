@@ -8,12 +8,29 @@ interface User {
   role: "admin" | "technician" | "viewer";
 }
 
+interface LoginRequest {
+  email: string;
+  password: string;
+}
+
+interface LoginResponse {
+  token: string;
+  user: User;
+}
+
 export const authApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
+    login: builder.mutation<LoginResponse, LoginRequest>({
+      query: (body) => ({
+        url: "/auth/login",
+        method: "POST",
+        body,
+      }),
+    }),
     getMe: builder.query<{ user: User }, void>({
       query: () => "/auth/me",
     }),
   }),
 });
 
-export const { useGetMeQuery } = authApi;
+export const { useLoginMutation, useGetMeQuery } = authApi;
