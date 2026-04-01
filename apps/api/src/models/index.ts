@@ -20,50 +20,52 @@ export function initModels(): void {
   SLAMetric.initModel(sequelize);
 
   // --- Client associations ---
-  Client.hasMany(Device, { foreignKey: "clientId", as: "devices" });
-  Client.hasMany(Ticket, { foreignKey: "clientId", as: "tickets" });
-  Client.hasMany(Alert, { foreignKey: "clientId", as: "alerts" });
-  Client.hasMany(PrintJob, { foreignKey: "clientId", as: "printJobs" });
-  Client.hasMany(SLAMetric, { foreignKey: "clientId", as: "slaMetrics" });
+  Client.hasMany(Device, { foreignKey: "clientId", as: "devices", onDelete: "CASCADE" });
+  Client.hasMany(Ticket, { foreignKey: "clientId", as: "tickets", onDelete: "CASCADE" });
+  Client.hasMany(Alert, { foreignKey: "clientId", as: "alerts", onDelete: "CASCADE" });
+  Client.hasMany(PrintJob, { foreignKey: "clientId", as: "printJobs", onDelete: "CASCADE" });
+  Client.hasMany(SLAMetric, { foreignKey: "clientId", as: "slaMetrics", onDelete: "CASCADE" });
 
   // --- Device associations ---
-  Device.belongsTo(Client, { foreignKey: "clientId", as: "client" });
-  Device.hasMany(Ticket, { foreignKey: "deviceId", as: "tickets" });
-  Device.hasMany(Alert, { foreignKey: "deviceId", as: "alerts" });
-  Device.hasMany(PrintJob, { foreignKey: "deviceId", as: "printJobs" });
+  Device.belongsTo(Client, { foreignKey: "clientId", as: "client", onDelete: "CASCADE" });
+  Device.hasMany(Ticket, { foreignKey: "deviceId", as: "tickets", onDelete: "SET NULL" });
+  Device.hasMany(Alert, { foreignKey: "deviceId", as: "alerts", onDelete: "CASCADE" });
+  Device.hasMany(PrintJob, { foreignKey: "deviceId", as: "printJobs", onDelete: "SET NULL" });
 
   // --- User associations ---
-  User.hasMany(Ticket, { foreignKey: "assignedToId", as: "assignedTickets" });
+  User.hasMany(Ticket, { foreignKey: "assignedToId", as: "assignedTickets", onDelete: "SET NULL" });
   User.hasMany(Alert, {
     foreignKey: "acknowledgedById",
     as: "acknowledgedAlerts",
+    onDelete: "SET NULL",
   });
-  User.hasMany(PrintJob, { foreignKey: "userId", as: "printJobs" });
-  User.hasOne(Technician, { foreignKey: "userId", as: "technician" });
+  User.hasMany(PrintJob, { foreignKey: "userId", as: "printJobs", onDelete: "SET NULL" });
+  User.hasOne(Technician, { foreignKey: "userId", as: "technician", onDelete: "CASCADE" });
 
   // --- Ticket associations ---
-  Ticket.belongsTo(Client, { foreignKey: "clientId", as: "client" });
-  Ticket.belongsTo(User, { foreignKey: "assignedToId", as: "assignedTo" });
-  Ticket.belongsTo(Device, { foreignKey: "deviceId", as: "device" });
+  Ticket.belongsTo(Client, { foreignKey: "clientId", as: "client", onDelete: "CASCADE" });
+  Ticket.belongsTo(User, { foreignKey: "assignedToId", as: "assignedTo", onDelete: "SET NULL" });
+  Ticket.belongsTo(Device, { foreignKey: "deviceId", as: "device", onDelete: "SET NULL" });
 
   // --- Alert associations ---
-  Alert.belongsTo(Device, { foreignKey: "deviceId", as: "device" });
-  Alert.belongsTo(Client, { foreignKey: "clientId", as: "client" });
+  Alert.belongsTo(Device, { foreignKey: "deviceId", as: "device", onDelete: "CASCADE" });
+  Alert.belongsTo(Client, { foreignKey: "clientId", as: "client", onDelete: "CASCADE" });
   Alert.belongsTo(User, {
     foreignKey: "acknowledgedById",
     as: "acknowledgedBy",
+    onDelete: "SET NULL",
   });
 
   // --- PrintJob associations ---
-  PrintJob.belongsTo(Device, { foreignKey: "deviceId", as: "device" });
-  PrintJob.belongsTo(Client, { foreignKey: "clientId", as: "client" });
-  PrintJob.belongsTo(User, { foreignKey: "userId", as: "user" });
+  PrintJob.belongsTo(Device, { foreignKey: "deviceId", as: "device", onDelete: "SET NULL" });
+  PrintJob.belongsTo(Client, { foreignKey: "clientId", as: "client", onDelete: "CASCADE" });
+  PrintJob.belongsTo(User, { foreignKey: "userId", as: "user", onDelete: "SET NULL" });
 
   // --- Technician associations ---
-  Technician.belongsTo(User, { foreignKey: "userId", as: "user" });
+  Technician.belongsTo(User, { foreignKey: "userId", as: "user", onDelete: "CASCADE" });
 
   // --- SLAMetric associations ---
-  SLAMetric.belongsTo(Client, { foreignKey: "clientId", as: "client" });
+  SLAMetric.belongsTo(Client, { foreignKey: "clientId", as: "client", onDelete: "CASCADE" });
 }
 
 export { User } from "./User.js";
