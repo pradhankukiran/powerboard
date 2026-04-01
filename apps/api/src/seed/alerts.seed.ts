@@ -250,7 +250,7 @@ export async function seedAlerts(
   let alertsCreated = 0;
   for (let i = 0; i < records.length; i += BATCH) {
     const batch = records.slice(i, i + BATCH);
-    await Alert.bulkCreate(batch, { validate: false });
+    await Alert.bulkCreate(batch, { validate: true });
     alertsCreated += batch.length;
   }
 
@@ -258,7 +258,7 @@ export async function seedAlerts(
   let ticketsCreated = 0;
   for (let i = 0; i < monitoringTicketRecords.length; i += BATCH) {
     const batch = monitoringTicketRecords.slice(i, i + BATCH);
-    await Ticket.bulkCreate(batch, { validate: false });
+    await Ticket.bulkCreate(batch, { validate: true });
     ticketsCreated += batch.length;
   }
 

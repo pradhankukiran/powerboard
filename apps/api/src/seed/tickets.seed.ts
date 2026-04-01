@@ -325,7 +325,7 @@ export async function seedTickets(
   let created = 0;
   for (let i = 0; i < records.length; i += BATCH) {
     const batch = records.slice(i, i + BATCH);
-    await Ticket.bulkCreate(batch, { validate: false });
+    await Ticket.bulkCreate(batch, { validate: true });
     created += batch.length;
   }
 
