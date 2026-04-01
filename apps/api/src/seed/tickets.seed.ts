@@ -13,6 +13,7 @@ type Category =
   | "security"
   | "email"
   | "printing"
+  | "onboarding"
   | "other";
 type Source = "phone" | "email" | "portal" | "monitoring" | "walk_in";
 
@@ -32,6 +33,7 @@ const CATEGORY_WEIGHTS: Array<{ value: Category; weight: number }> = [
   { value: "security", weight: 15 },
   { value: "email", weight: 10 },
   { value: "printing", weight: 10 },
+  { value: "onboarding", weight: 5 },
   { value: "other", weight: 5 },
 ];
 
@@ -124,12 +126,19 @@ const SUBJECTS_BY_CATEGORY: Record<Category, string[]> = {
     "Print server spooler crashing",
     "Printer sharing access denied",
   ],
-  other: [
+  onboarding: [
     "New employee onboarding setup",
+    "Laptop provisioning for new hire",
+    "Account creation and permissions setup",
+    "Welcome packet IT orientation",
+    "New employee VPN and email setup",
+  ],
+  other: [
     "Conference room AV equipment issue",
     "UPS battery replacement needed",
     "Office relocation IT planning",
     "Vendor access provisioning request",
+    "General IT inquiry",
   ],
 };
 
